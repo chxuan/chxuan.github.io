@@ -1,0 +1,895 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpprestsdk,http client,PPL," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="chxuan's Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="前言C++中http client库本身就少，好用的就更少了，在了解微软开源的CPP REST SDK库之前，我知道的C++ http client库有libcurl（这个是C语言的），Qt的QNetworkAccessManager，还有VC++ http client，Qt的QNetworkAccessManager库我在开发CZPlayer的时候用来下载过音乐、专辑图片和歌词，不得不说Qt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="好用的http client库CPP REST SDK">
+<meta property="og:url" content="http://yoursite.com/2016/11/01/好用的http client库CPP REST SDK/index.html">
+<meta property="og:site_name" content="chxuan's Notes">
+<meta property="og:description" content="前言C++中http client库本身就少，好用的就更少了，在了解微软开源的CPP REST SDK库之前，我知道的C++ http client库有libcurl（这个是C语言的），Qt的QNetworkAccessManager，还有VC++ http client，Qt的QNetworkAccessManager库我在开发CZPlayer的时候用来下载过音乐、专辑图片和歌词，不得不说Qt">
+<meta property="og:image" content="https://raw.githubusercontent.com/chxuan/images/master/blog/2016/11/cpprestsdk.jpg">
+<meta property="og:updated_time" content="2016-11-26T15:14:00.784Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="好用的http client库CPP REST SDK">
+<meta name="twitter:description" content="前言C++中http client库本身就少，好用的就更少了，在了解微软开源的CPP REST SDK库之前，我知道的C++ http client库有libcurl（这个是C语言的），Qt的QNetworkAccessManager，还有VC++ http client，Qt的QNetworkAccessManager库我在开发CZPlayer的时候用来下载过音乐、专辑图片和歌词，不得不说Qt">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chxuan/images/master/blog/2016/11/cpprestsdk.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6343381952258639000',
+      author: 'chxuan'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/01/好用的http client库CPP REST SDK/"/>
+
+
+  <title> 好用的http client库CPP REST SDK | chxuan's Notes </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?e856d6690dd6a11864a2d65cf1d87f06";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">chxuan's Notes</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Keep It Simple, Stupid.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                好用的http client库CPP REST SDK
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-01T22:05:41+08:00" content="2016-11-01">
+              2016-11-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/C-11/" itemprop="url" rel="index">
+                    <span itemprop="name">C++11</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/01/好用的http client库CPP REST SDK/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/01/好用的http client库CPP REST SDK/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://raw.githubusercontent.com/chxuan/images/master/blog/2016/11/cpprestsdk.jpg" alt="此处输入图片的描述"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>C++中http client库本身就少，好用的就更少了，在了解微软开源的<a href="https://github.com/Microsoft/cpprestsdk" target="_blank" rel="external">CPP REST SDK</a>库之前，我知道的C++ http client库有<a href="https://curl.haxx.se/" target="_blank" rel="external">libcurl</a>（这个是C语言的），Qt的<a href="http://doc.qt.io/qt-5/qnetworkaccessmanager.html" target="_blank" rel="external">QNetworkAccessManager</a>，还有VC++ http client，Qt的QNetworkAccessManager库我在开发<a href="https://github.com/chxuan/CZPlayer" target="_blank" rel="external">CZPlayer</a>的时候用来下载过音乐、专辑图片和歌词，不得不说Qt提供的API还是比较好用的，如果不涉及界面开发，难道我们在linux上就只能用libcurl，在windows上就用VC++的http client？答案是否定的，在绝望之际CPP REST SDK出现在我的眼前，CPP REST SDK是微软开源的基于PPL的异步http client，网络层使用的是Boost.Asio，跨平台，并且支持json解析，在使用CPP REST SDK之前要确保你已经安装了boost和openssl，下面是微软官方提供的例子。</p>
+<a id="more"></a>
+<h2 id="微软官方例子"><a href="#微软官方例子" class="headerlink" title="微软官方例子"></a>微软官方例子</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cpprest/http_client.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cpprest/filestream.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> utility;                    <span class="comment">// Common utilities like string conversions</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> web;                        <span class="comment">// Common features like URIs.</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> web::http;                  <span class="comment">// Common HTTP functionality</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> web::http::client;          <span class="comment">// HTTP client features</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> concurrency::streams;       <span class="comment">// Asynchronous streams</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">auto</span> fileStream = <span class="built_in">std</span>::make_shared&lt;ostream&gt;();</div><div class="line"></div><div class="line">    <span class="comment">// Open stream to output file.</span></div><div class="line">    pplx::task&lt;<span class="keyword">void</span>&gt; requestTask = fstream::open_ostream(U(<span class="string">"results.html"</span>)).then([=](ostream outFile)</div><div class="line">    &#123;</div><div class="line">        *fileStream = outFile;</div><div class="line"></div><div class="line">        <span class="comment">// Create http_client to send the request.</span></div><div class="line">        http_client client(U(<span class="string">"http://www.bing.com/"</span>));</div><div class="line"></div><div class="line">        <span class="comment">// Build request URI and start the request.</span></div><div class="line">        uri_builder builder(U(<span class="string">"/search"</span>));</div><div class="line">        builder.append_query(U(<span class="string">"q"</span>), U(<span class="string">"cpprestsdk github"</span>));</div><div class="line">        <span class="keyword">return</span> client.request(methods::GET, builder.to_string());</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="comment">// Handle response headers arriving.</span></div><div class="line">    .then([=](http_response response)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"Received response status code:%u\n"</span>, response.status_code());</div><div class="line"></div><div class="line">        <span class="comment">// Write response body into the file.</span></div><div class="line">        <span class="keyword">return</span> response.body().read_to_end(fileStream-&gt;streambuf());</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    <span class="comment">// Close the file stream.</span></div><div class="line">    .then([=](<span class="keyword">size_t</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> fileStream-&gt;close();</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// Wait for all the outstanding I/O to complete and handle any exceptions</span></div><div class="line">    <span class="keyword">try</span></div><div class="line">    &#123;</div><div class="line">        requestTask.wait();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span> (<span class="keyword">const</span> <span class="built_in">std</span>::exception &amp;e)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"Error exception:%s\n"</span>, e.what());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的例子主要内容是访问一个网站并将该内容保存在results.html里面，这里用到了微软自家的PPL并行计算库（还有一个是英特尔的TBB），该例子使用lambda表达式作为异步回调的handler，打开文件流、请求、回应和关闭文件流都是异步的，为了方便起见，我们将该例子改为同步方式。</p>
+<h2 id="使用同步方式"><a href="#使用同步方式" class="headerlink" title="使用同步方式"></a>使用同步方式</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">auto fileStream = std::make_shared&lt;ostream&gt;();</div><div class="line">ostream outFile = fstream::open_ostream(U("results.html")).get();</div><div class="line">*fileStream = outFile;</div><div class="line"></div><div class="line">// Create http_client to send the request.</div><div class="line">http_client client(U("http://www.bing.com/"));</div><div class="line"></div><div class="line">// Build request URI and start the request.</div><div class="line">uri_builder builder(U("/search"));</div><div class="line">builder.append_query(U("q"), U("cpprestsdk github"));</div><div class="line">http_response response = client.request(methods::GET, builder.to_string()).get();</div><div class="line">// Write response body into the file.</div><div class="line">response.body().read_to_end(fileStream-&gt;streambuf()).get();</div><div class="line">fileStream-&gt;close().get();</div></pre></td></tr></table></figure>
+<p>使用同步方式的代码比较清晰，可以看到每一个函数调用后面都会调用get函数，因为CPP REST SDK是基于PPL的，所以在request、read_to_end、close等函数调用后都会返回一个Task对象，而Task里面的get和wait函数是等待任务执行完成。</p>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>我之前在看别人博客的时候看到每一篇博客前都有一副图，看起来比较好看，听博主讲他是使用bing的每日一图，后来我也效仿，我在主题之家找到了自己比较喜欢的图片，最开始自己写博客的时候都是直接去主题之家一页一页的找看，然后再下载图片，写了几篇博客之后感觉每次都要去下载图片感觉有点low，所以我决定直接将主题之家的某类型的图片都下载下来，这样选图片就方便多了，下面是我在主题之家抓图的代码。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;string&gt;</div><div class="line">#include &lt;vector&gt;</div><div class="line">#include &lt;fstream&gt;</div><div class="line">#include &lt;memory&gt;</div><div class="line">#include &lt;regex&gt;</div><div class="line">#include &lt;cpprest/http_client.h&gt;</div><div class="line">#include &lt;cpprest/filestream.h&gt;</div><div class="line">#include &lt;cpprest/containerstream.h&gt;</div><div class="line"></div><div class="line">// 请求并解析url</div><div class="line">bool get_result(const std::string&amp; url, const std::string&amp; pattern, std::vector&lt;std::string&gt;&amp; vec)</div><div class="line">&#123;</div><div class="line">	try</div><div class="line">	&#123;</div><div class="line">		web::http::client::http_client client(web::uri(utility::conversions::to_string_t(url)));</div><div class="line">		web::http::http_response response = client.request(web::http::methods::GET).get();</div><div class="line"></div><div class="line">		concurrency::streams::stringstreambuf buffer;</div><div class="line">		response.body().read_to_end(buffer).get();</div><div class="line">		std::string&amp; str = buffer.collection();</div><div class="line">        </div><div class="line">        // 使用C++11提供的正则表达式库</div><div class="line">		std::regex r(pattern);</div><div class="line">		for (std::sregex_iterator iter(str.begin(), str.end(), r), end; iter != end; ++iter)</div><div class="line">		&#123;</div><div class="line">			std::cout &lt;&lt; iter-&gt;str() &lt;&lt; std::endl;</div><div class="line">			vec.emplace_back(iter-&gt;str());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	catch (std::exception&amp; e)</div><div class="line">	&#123;</div><div class="line">		std::cout &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 获取图片</div><div class="line">bool get_result(const std::string&amp; url, std::string&amp; picture)</div><div class="line">&#123;</div><div class="line">	try</div><div class="line">	&#123;</div><div class="line">		web::http::client::http_client client(web::uri(utility::conversions::to_string_t(url)));</div><div class="line">		web::http::http_response response = client.request(web::http::methods::GET).get();</div><div class="line"></div><div class="line">		concurrency::streams::stringstreambuf buffer;</div><div class="line">		response.body().read_to_end(buffer).get();</div><div class="line">		picture = buffer.collection();</div><div class="line">	&#125;</div><div class="line">	catch (std::exception&amp; e)</div><div class="line">	&#123;</div><div class="line">		std::cout &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 保存图片</div><div class="line">bool write_to_file(const std::string&amp; file_path, const std::string&amp; data)</div><div class="line">&#123;</div><div class="line">	try</div><div class="line">	&#123;</div><div class="line">		std::ofstream file;</div><div class="line">		file.open(file_path, std::ios::out | std::ios::binary);</div><div class="line">		if (!file.good())</div><div class="line">		&#123;</div><div class="line">			return false;</div><div class="line">		&#125;</div><div class="line">		file.write(data.c_str(), data.size());</div><div class="line">		file.close();</div><div class="line">	&#125;</div><div class="line">	catch (std::exception&amp; e)</div><div class="line">	&#123;</div><div class="line">		std::cout &lt;&lt; "Exception: " &lt;&lt; e.what() &lt;&lt; std::endl;</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    // [1] 请求每一页，将子页面的url保存在sub_url_vec里面</div><div class="line">	std::vector&lt;std::string&gt; sub_url_vec;</div><div class="line">	std::string pattern = "/desk/[0-9]+.htm";</div><div class="line">	for (int i = 1; i &lt;= 32; ++i)</div><div class="line">	&#123;</div><div class="line">		// 创意主题</div><div class="line">		std::string url = "http://www.51ztzj.com/dbizhi/category_27_" + std::to_string(i) + ".htm#content_anchor";</div><div class="line">		std::cout &lt;&lt; "Start get " &lt;&lt; i &lt;&lt; " page, url: " &lt;&lt; url &lt;&lt; std::endl;</div><div class="line">		// 请求并解析url</div><div class="line">		if (!get_result(url, pattern, sub_url_vec))</div><div class="line">		&#123;</div><div class="line">			std::cout &lt;&lt; "Get " &lt;&lt; i &lt;&lt; " page failed" &lt;&lt; std::endl;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 最终的图片url：http://img.51ztzj.com//upload/image/20130220/2013022014_670x419.jpg</div><div class="line">	// [2] 将子页面的图片url解析出来放入picture_url_vec</div><div class="line">	std::vector&lt;std::string&gt; picture_url_vec;</div><div class="line">	pattern = "http://img.51ztzj.com//upload/image/.+/.+_670x419.jpg";</div><div class="line">	for (std::size_t i = 0; i &lt; sub_url_vec.size(); ++i)</div><div class="line">	&#123;</div><div class="line">		std::string url = "http://www.51ztzj.com" + sub_url_vec[i];</div><div class="line">		std::cout &lt;&lt; "Start get " &lt;&lt; i + 1 &lt;&lt; " sub page, url: " &lt;&lt; url &lt;&lt; std::endl;</div><div class="line">		// 请求并解析url</div><div class="line">		if (!get_result(url, pattern, picture_url_vec))</div><div class="line">		&#123;</div><div class="line">			std::cout &lt;&lt; "Get " &lt;&lt; i + 1 &lt;&lt; " sub page failed" &lt;&lt; std::endl;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">    // [3] 最后遍历picture_url_vec，然后一个一个的下载图片</div><div class="line">	for (std::size_t i = 0; i &lt; picture_url_vec.size(); ++i)</div><div class="line">	&#123;</div><div class="line">		std::cout &lt;&lt; "Start download " &lt;&lt; i + 1 &lt;&lt; " picture, url: " &lt;&lt; picture_url_vec[i] &lt;&lt; std::endl;</div><div class="line">		std::string picture;</div><div class="line">		// 获取图片</div><div class="line">		if (!get_result(picture_url_vec[i], picture))</div><div class="line">		&#123;</div><div class="line">			std::cout &lt;&lt; "Download " &lt;&lt; i + 1 &lt;&lt; " picture failed" &lt;&lt; std::endl;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		std::string file_path = "./download/" + std::to_string(i) + ".jpg";</div><div class="line">		// 保存图片</div><div class="line">		if (!write_to_file(file_path, picture))</div><div class="line">		&#123;</div><div class="line">			std::cout &lt;&lt; "Write to file failed: " &lt;&lt; i + 1 &lt;&lt; std::endl;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="chxuan wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpprestsdk/" rel="tag">#cpprestsdk</a>
+          
+            <a href="/tags/http-client/" rel="tag">#http client</a>
+          
+            <a href="/tags/PPL/" rel="tag">#PPL</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/29/让boost.variant支持lambda表达式访问/" rel="next" title="让boost.variant支持lambda表达式访问">
+                <i class="fa fa-chevron-left"></i> 让boost.variant支持lambda表达式访问
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/27/使用方便的单例类/" rel="prev" title="使用方便的单例类">
+                使用方便的单例类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/01/好用的http client库CPP REST SDK/"
+           data-title="好用的http client库CPP REST SDK" data-url="http://yoursite.com/2016/11/01/好用的http client库CPP REST SDK/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/chxuan.png"
+               alt="chxuan" />
+          <p class="site-author-name" itemprop="name">chxuan</p>
+          <p class="site-description motion-element" itemprop="description">专注C++后台研发</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chxuan" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://isocpp.org" title="isocpp" target="_blank">isocpp</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://en.cppreference.com" title="cppreference" target="_blank">cppreference</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cplusplus.com" title="cplusplus" target="_blank">cplusplus</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://purecpp.org" title="purecpp" target="_blank">purecpp</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微软官方例子"><span class="nav-number">2.</span> <span class="nav-text">微软官方例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用同步方式"><span class="nav-number">3.</span> <span class="nav-text">使用同步方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战"><span class="nav-number">4.</span> <span class="nav-text">实战</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">chxuan</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"chxuan"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = false;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title >= 0 || index_content >= 0 ){
+                                isMatch = true;
+								if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            } 
+							
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
